@@ -11,14 +11,15 @@
 using namespace std;
 
 /////////Something something function list///////
-int getRandomNumber(int low, int high);
+int Randomizer(int low, int high);
 int CardValue(int card);
 int getTopCard(int deck[]);
 int GetBani1();
 int GetBani2();
 int getHandValue(const int hand[]);
 int Pariu1();
-bool playAnotherHand(char&);
+int Pariu2();
+bool IncaUnMeci(char&);
 bool is_digits(const std::string &str);
 bool userWantsToDraw(char&);
 void InitializarePachet(int deck[]);
@@ -37,12 +38,13 @@ void playOneHand();
 void Update1();
 void UpdateMoney1();
 void UpdateMoneyFile();
+void UpdateMoneyFile2();
 void Update2();
 void UpdateMoney2();
 void scoreBoard(const int pHand[], const int dHand[]);
 void checkSoftOrHard(int pHand[]);
 void softOrHardAI(int dHand[], int pHand[]);
-void chooseLevelOfDificulty();
+void NivelDificult();
 void showRules();
 void addToHand(int hand[], int cardToAdd);
 void hitUntilStand(int dHand[], int deck[], int pHand[]);
@@ -50,7 +52,7 @@ std::string GetNume();
 
 
 int topCard = 0;
-float win = 1.00;
+float scor = 1.00;
 int level;
 int Player1Bani;
 int Player2Bani;
@@ -58,9 +60,7 @@ int rezultat=1;
 int pariu;
 
 int main()
-{       //Update1();
-        //UpdateMoney1();
-        showMenu();
+{       showMenu();
         menu();
 		return 0;
 	}
@@ -88,12 +88,12 @@ Name: Menu
 void menu()
 {
 		char a;
-		int upData;
+		string upData;
 		cin>>a;
 		if(a == '1')
             {
                 showRules();
-                chooseLevelOfDificulty();
+                NivelDificult();
                 playOneHand();
             }
 		else if(a == '2'){
@@ -101,14 +101,14 @@ void menu()
                 cout<<"Ce doriti sa actualizati?"<<endl;
                 cout<<"Nume sau bani? (1 pentru nume/2 pentru bani) :";
                 cin>>upData;
-                cout<<upData<<endl;
-                if(upData==1)
+                cout<<endl;
+                if(upData[0]=='1')
                     {Update1();
                     cout<<endl;
                     cout<<"Modificarile au fost efectuate"<<endl;
                     showMenu();
                     menu();}
-                else if(upData==2)
+                else if(upData[0]=='2')
                     {UpdateMoney1();
                     cout<<endl;
                     cout<<"Modificarile au fost efectuate"<<endl;
@@ -185,20 +185,10 @@ out<< bani;
 out.close();
 }
 
-void UpdateMoneyFile(){
-ofstream out("Player1Money.txt");
-out.close();
-ofstream out2("Player1Money.txt");
-int x;
-x=Player1Bani;
-out2<< x;
-out2.close();
-}
-
 
 void UpdateMoney2()
 {
-ofstream out("Player1Money.txt");
+ofstream out("Player2Money.txt");
 int bani;
 cout<<"Suma de bani=";
 cin>>bani;
@@ -211,6 +201,31 @@ out<< bani;
 out.close();
 
 }
+
+/* ==================================================
+Name: Update foldere
+================================================== */
+void UpdateMoneyFile(){
+ofstream out("Player1Money.txt");
+out.close();
+ofstream out2("Player1Money.txt");
+int x;
+x=Player1Bani;
+out2<< x;
+out2.close();
+}
+
+void UpdateMoneyFile2(){
+ofstream out("Player2Money.txt");
+out.close();
+ofstream out2("Player2Money.txt");
+int x;
+x=Player1Bani;
+out2<< x;
+out2.close();
+}
+
+
 /* ==================================================
 Name: Sistem Pariuri
 
@@ -230,7 +245,7 @@ return x;
 
 int Pariu1()
 {
-cout<<"Introduce-ti suma pe care doriti sa o pariati:";
+cout<<"Introduceti suma pe care doriti sa o pariati:";
 int x,money;
 money=GetBani1();
 cin>>x;
@@ -241,6 +256,18 @@ if(x<=0||x>money){
 return x;
 }
 
+int Pariu2()
+{
+cout<<"Introduceti suma pe care doriti sa o pariati:";
+int y,money;
+money=GetBani2();
+cin>>y;
+if(y<=0||y>money){
+    cout<<"Nu puteti paria aceeasta suma"<<endl;
+    Pariu2();
+}
+return y;
+}
 
 /* ==================================================
 Name: showRules
@@ -287,7 +314,7 @@ void showRules()
 Name: Nivel Dificultate
 
 ================================================== */
-void chooseLevelOfDificulty()
+void NivelDificult()
 {
 
 	cout << "\n";
@@ -305,14 +332,14 @@ void chooseLevelOfDificulty()
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 
-			cout << "Te rog introdu unul din urmatoarele numere:1 sau 2" << endl;
-			chooseLevelOfDificulty();
+			cout << "Te rog introdu unul din urmatoarele numerele:1 sau 2" << endl;
+			NivelDificult();
 		}
 	}
 }
 /* ==================================================
 Name: CS
-
+Counter strike???
 ================================================== */
 
   void ClearScreen()
@@ -322,12 +349,7 @@ Name: CS
       printf( "\n\n\n\n\n\n\n\n\n\n" );
     }
  /* ==================================================
-Name: playOneHand
-Desc: Main game logic.
-Parameters:
-   None.
-Return:
-   void.
+Name: GetNume (direct3DinFisier)
 ================================================== */
 
 std::string GetNume()
@@ -341,7 +363,7 @@ return name;
 }
 
 /* ==================================================
-Name: playOneHand
+Name: playOneHand (Toata frumusetea jocului)
 
 ================================================== */
 void playOneHand()
@@ -399,7 +421,7 @@ void playOneHand()
 		blackJack(pHand, dHand, 'Y');
 		whoWins(pHand, dHand);
 		cout << endl;
-		cout << "Winnings multiplier: " << win << endl;
+		cout << "Scor: " << scor << endl;
 		if(rezultat==1)
             {Player1Bani=Player1Bani+pariu;
             cout<<"Ai in cont:"<<" "<<Player1Bani<<endl;
@@ -411,11 +433,11 @@ void playOneHand()
             UpdateMoneyFile();
             }
 	}
-	while (playAnotherHand(Play));
+	while (IncaUnMeci(Play));
 }
 
 /* ==================================================
-Name: InitializarePachet
+Name: InitializarePachetCarti
 
 ================================================== */
 void InitializarePachet(int deck[])
@@ -453,8 +475,8 @@ void amestecare(int deck[], int size)
 	for(int i = 0; i < 500; i++)
 	{
 		int T1 = 0;
-		int R1 = getRandomNumber(0, size);
-		int R2 = getRandomNumber(0, size);
+		int R1 = Randomizer(0, size);
+		int R2 = Randomizer(0, size);
 
 		T1	= deck[R1];
 		deck[R1] = deck[R2];
@@ -463,7 +485,7 @@ void amestecare(int deck[], int size)
 }
 
 /* ==================================================
-Name: ShowCard
+Name: ShowCard(Afisare carti)
 
 ================================================== */
 void ShowCard(int card)
@@ -526,7 +548,7 @@ void ShowCard(int card)
 }
 
 /* ==================================================
-Name: ShowCards
+Name: ShowCards(Afisare reala carti)
 
 ================================================== */
 void showCards(const int deck[], int numCards, bool hideFirstCard)
@@ -558,7 +580,7 @@ void showCards(const int deck[], int numCards, bool hideFirstCard)
 }
 
 /* ==================================================
-Name: dumpDeck
+Name: dumpDeck (>full of use)
 
 ================================================== */
 void dumpDeck(int deck[], int size)
@@ -570,10 +592,10 @@ void dumpDeck(int deck[], int size)
 }
 
 /* ==================================================
-Name: getRandomNumber
+Name: Randomizer (genereaza numar >random)
 
 ================================================== */
-int getRandomNumber(int low, int high) {
+int Randomizer(int low, int high) {
 	static bool firstTime=true;
 	int randNum;
 
@@ -588,7 +610,7 @@ int getRandomNumber(int low, int high) {
 }
 
 /* ==================================================
-Name: CardValue
+Name: CardValue (valoarea carte----->Dificultate/Calcul puncte)
 
 ================================================== */
 int CardValue(int card)
@@ -620,16 +642,15 @@ Name: getTopCard
 ================================================== */
 int getTopCard(int deck[])
 {
-	for(int i = 0; i < 51; i++)
-	{
-		if(deck[i] != 0)
-		{
-
-			topCard = deck[i];
-			deck[i] = 0;
-			return topCard;
-		}
-	}
+    for(int i = 0; i < 51; i++)
+    {
+        if(deck[i] != 0)
+        {
+            topCard = deck[i];
+            deck[i] = 0;
+            return topCard;
+        }
+    }
 }
 
 /* ==================================================
@@ -649,7 +670,7 @@ void addToHand(int hand[], int cardToAdd)
 }
 
 /* ==================================================
-Name: hitUntilStand
+Name: hitUntilStand (Limitare Dealer-momentan 17)
 
 ================================================== */
 void hitUntilStand(int dHand[], int deck[], int pHand[])
@@ -666,7 +687,6 @@ void hitUntilStand(int dHand[], int deck[], int pHand[])
 			else if( level == 2)
 			{
 				addToHand(dHand, getTopCard(deck));
-
 				softOrHardAI(dHand, pHand);
 			}
 		}
@@ -698,7 +718,7 @@ void hitUntilStand(int dHand[], int deck[], int pHand[])
 }
 
 /* ==================================================
-Name: getHandValue
+Name: getHandValue(Calcul pentru valoarea de puncte)
 
 ================================================== */
 int getHandValue(const int hand[])
@@ -714,17 +734,17 @@ int getHandValue(const int hand[])
 }
 
 /* ==================================================
-Name: playAnotherHand
+Name: IncaUnMeci
 
 ==================================================*/
-bool playAnotherHand(char& Play)
+bool IncaUnMeci(char& Joaca)
 {
 
 	cout << endl << "\nVrei sa joci alt meci? (Y/N) ";
-	cin >> Play;
+	cin >> Joaca;
 	cout << "\n" << endl;
 
-	if(Play == 'y' || Play == 'Y')
+	if(Joaca == 'y' || Joaca == 'Y')
 	{
 		playOneHand();
 		return(true);
@@ -739,7 +759,7 @@ bool playAnotherHand(char& Play)
 }
 
 /* ==================================================
-Name: userWantsToDraw
+Name: userWantsToDraw(To hit or not to hit, that's the "QuestChin")
 
 ==================================================*/
 bool userWantsToDraw(char& Draw)
@@ -775,7 +795,7 @@ void whoWins(const int pHand[], const int dHand[])
 	{
 		cout << "\n";
 		cout << "Ai Castigat!" << endl;
-		win++;
+		scor++;
 		rezultat=1;
 	}
 	else
@@ -792,14 +812,14 @@ void whoWins(const int pHand[], const int dHand[])
 		{
 			cout << "\n";
 			cout << "Ai pierdut" << endl;
-			win--;
+			scor--;
 			rezultat=0;
 		}
 	}
 }
 
 /* ==================================================
-Name: check Bust
+Name: check Bust(afisare trecerea peste limita punctajului)
 
 ================================================== */
 void checkBust(const int pHand[], const int dHand[], char Play)
@@ -813,11 +833,11 @@ void checkBust(const int pHand[], const int dHand[], char Play)
 	{
 		cout << "Ai trecut peste limita avand " << getHandValue(pHand) << " de puncte." << endl;
 		cout << "\n" << endl;
-		win--;
+		scor--;
 		Player1Bani=Player1Bani-pariu;
 		UpdateMoneyFile();
-		cout << "Scor:" << win << endl;
-		playAnotherHand(Play);
+		cout << "Scor:" << scor << endl;
+		IncaUnMeci(Play);
 	}
 
 	else if(dealerScore > 21)
@@ -826,16 +846,16 @@ void checkBust(const int pHand[], const int dHand[], char Play)
 		cout << "\n" << endl;
 		cout << "Dealer-ul a trecut peste limita de puncte!" << endl;
 		cout << "\n" << endl;
-		win++;
+		scor++;
         Player1Bani=Player1Bani+pariu;
 		UpdateMoneyFile();
-		cout << "Scor: " << win << endl;
-		playAnotherHand(Play);
+		cout << "Scor: " << scor << endl;
+		IncaUnMeci(Play);
 	}
 }
 
 /* ==================================================
-Name: blackJack
+Name: blackJack(Player+Dealer)
 
 ================================================== */
 void blackJack(const int pHand[], const int dHand[], char Play)
@@ -849,37 +869,34 @@ void blackJack(const int pHand[], const int dHand[], char Play)
 		scoreBoard(pHand,  dHand);
 		cout << "\n";
 		cout << "Blackjack! Ai castigat si ai primit bonus la scor." << endl;
-		win = win + 1.5;
+		scor = scor + 1.5;
         Player1Bani=Player1Bani+pariu;
 		UpdateMoneyFile();
 		cout << "\n";
-		cout << "Scor: " << win << endl;
-		playAnotherHand(Play);
+		cout << "Scor: " << scor << endl;
+		IncaUnMeci(Play);
 	}
 	else if((playerScore == 21) && (dealerScore == 21))
 	{
 		scoreBoard(pHand,  dHand);
 		cout << "\n";
 		cout << "Atat Dealer-ul cat si dumneavoastra ati primit 21 de puncte.Scorul va creste insa nu si banii" << endl;
-		win++;
+		scor++;
 		cout << "\n";
-		cout << "Scor " << win << endl;
-		playAnotherHand(Play);
+		cout << "Scor " << scor << endl;
+		IncaUnMeci(Play);
 	}
 }
 
 /* ==================================================
 Name: is_digits verificare (string = doar numere)
 ================================================== */
-
-
 bool is_digits(const std::string &str)
 {
     return str.find_first_not_of("0123456789") == std::string::npos;
 }
-
 /* ==================================================
-Name: naturalBlackJack
+Name: naturalBlackJack(====Bulan)
 
 ================================================== */
 void naturalBlackJack(const int pHand[], const int dHand[], char Play)
@@ -895,14 +912,13 @@ void naturalBlackJack(const int pHand[], const int dHand[], char Play)
 		cout << "Blackjack! Ai castigat si ai primit bonus la scor.";
 		Player1Bani=Player1Bani+pariu;
         UpdateMoneyFile();
-
-		win = win + 1.5;
-		playAnotherHand(Play);
+		scor = scor + 1.5;
+		IncaUnMeci(Play);
 	}
 }
 
 /* ==================================================
-Name: scoreBoard
+Name: scoreBoard(Afisare punctaj duh)
 
 ================================================== */
 void scoreBoard(const int pHand[], const int dHand[])
@@ -919,7 +935,7 @@ void scoreBoard(const int pHand[], const int dHand[])
 }
 
 /* ==================================================
-Name: checkSoftOrHard
+Name: checkSoftOrHard(Toata treaba cu As=1/11)
 
 ================================================== */
 void checkSoftOrHard(int pHand[])
