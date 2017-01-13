@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1484339601 source:d:\programe\codeblocks\share\codeblocks\projects\t2\main.cpp
+	<iostream>
+	<iomanip>
+	<cstdlib>
+	<ctime>
+	<limits>
+	<conio.h>
+	<fstream>
+	<string>
+	<ctype.h>
+
