@@ -11,14 +11,14 @@
 using namespace std;
 
 /////////Something something function list///////
+int Pariu1();
+int Pariu2();
 int Randomizer(int low, int high);
 int CardValue(int card);
 int getTopCard(int deck[]);
 int GetBani1();
 int GetBani2();
 int getHandValue(const int hand[]);
-int Pariu1();
-int Pariu2();
 bool IncaUnMeci(char&);
 bool is_digits(const std::string &str);
 bool userWantsToDraw(char&);
@@ -162,7 +162,7 @@ void Update2()
 
 }
 /* ==================================================
-Name: Update bani
+Name: Update bani   >cica doar plebeii baga comentarii
 ================================================== */
 void UpdateMoney1()
 {
@@ -227,8 +227,7 @@ out2.close();
 
 
 /* ==================================================
-Name: Sistem Pariuri
-
+Name: Sistem Pariuri  .dat_""""""system"""""
 ================================================== */
 int GetBani1()
 {ifstream fin("Player1Money.txt");
@@ -270,7 +269,7 @@ return y;
 }
 
 /* ==================================================
-Name: showRules
+Name: #CataGraficaTata
 
 ================================================== */
 void showRules()
